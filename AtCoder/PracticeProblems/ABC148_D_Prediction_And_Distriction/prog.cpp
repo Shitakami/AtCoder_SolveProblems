@@ -1,7 +1,6 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <queue>
 using namespace std;
 
 char WinHand(char hand) {
@@ -21,7 +20,6 @@ int main() {
     map<char, int> hand;
     long long int sum = 0;
     int r, s, p;
-    queue<char> oldHands;
     string hands;
 
     cin >> n >> k;
@@ -37,19 +35,36 @@ int main() {
     for(int i = 0; i < k; ++i) {
         
         int j = i;
-        while(j + k < n) {
+        while(j < n) {
 
-            int sameCount = 0;
+
+            int sameCount = 1;
             int index;
+            char nowHand = hands[j];
             for(index = j; index + k < n && hands[index] == hands[index + k]; index += k)
                 sameCount++;
+
+            
+
+            if(sameCount == 1) {
+                sum += hand[WinHand(nowHand)];
+                j += k;
+            }
+            else {
+                if(sameCount % 2 == 0) {
+                    sum += hand[WinHand(nowHand)] * sameCount / 2;
+                }
+                else {
+                    sum += hand[WinHand(nowHand)] * (sameCount / 2 + 1);
+                }
+
+                j = index + k;
+            }
 
 
         }
 
     }
-
-    cout << endl;
     cout << sum << endl;
     return 0;
 
