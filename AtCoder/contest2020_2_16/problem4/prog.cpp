@@ -60,7 +60,7 @@ int main() {
             index++;
         }
 
-        
+        cout << plusNum[index - 1] * plusNum[]
 
         
 

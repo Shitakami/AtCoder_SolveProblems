@@ -1,15 +1,10 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
-#include <queue>
-#include <set>
+#include <bitset>
 using namespace std;
 
 int main() {
-
-    const int none = -1;
-    const int True = 1;
-    const int False = 0;
-
 
     int n;
     cin >> n;
@@ -17,50 +12,59 @@ int main() {
     vector<vector<pair<int, int>>> members(n);
 
     for(int i = 0; i < n; ++i) {
-        int num;
-        cin >> num;
-        members[i] = vector<pair<int, int>>(num);
-        for(int j = 0; j < num; ++j) {
-            int x, y;
-            cin >> x >> y;
-            members[i][j].first = x;
-            members[i][j].second = y;
-
+        int a, b;
+        cin >> a;
+        members[i].resize(a);
+        for(int j = 0; j < a; ++j) {
+            cin >> members[i][j].first >> members[i][j].second;
+            members[i][j].first--;
         }
+
+
     }
 
-    decltype(auto) CorrectNetwork = [&]() {
+    decltype(auto) IsCorrect = [&](int bit) {
 
-        bool isTrue = true;
-        vector<int> isHonest(n, none);
-        set<int> doneConfirm;
-        queue<int> q;
+        for(int i = 0; i < n; ++i) {
 
-        doneConfirm.emplace(0);
-        q.push(0);
+            if( !(bit & (1 << i)) )
+                continue;
+            for(auto member : members[i]) {
 
-        while(!q.empty()) {
-
-            int member = q.front; q.pop();
-            for(const auto &m : members[member]) {
-
-                if(isHonest[m.first] == none) {
-                    isHonest[m.first] = m.second;
-                    q.push(m.first);
-                    continue;
-                }
+                if( (bit & (1 << member.first)) && member.second == 0) return false;
                 
-                if(isHonest[m.first] != m.second)
-                    return false;
+                if( !(bit & (1 << member.first)) && member.second == 1) return false;
+
+       
             }
+            
+        }
+
+    return true;
+        
+    };
+
+    int maxBit = 1 << n;
+    int maxCount = 0;
+    for(int bit = 1; bit < maxBit; ++bit) {
+        
+
+        if(IsCorrect(bit)) {
+            // cout << "Correct " << bitset<8>(bit) << endl;
+
+            int count = 0;
+            for(int i = 0; i < n; ++i) {
+                if(bit & (1 << i))
+                    count++;
+            }   
+
+            maxCount = max(maxCount, count);
 
         }
 
-        return true;
+    }
 
-    };
-
-
+    cout << maxCount << endl;
 
     return 0;
 
