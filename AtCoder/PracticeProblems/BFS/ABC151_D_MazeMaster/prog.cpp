@@ -1,3 +1,9 @@
+/*
+ * WA
+ * ある地点から一番遠い地点を見つけて
+ * そこから一番遠い地点までの距離を求める
+ */
+
 #include <iostream>
 #include <queue>
 #include <set>
